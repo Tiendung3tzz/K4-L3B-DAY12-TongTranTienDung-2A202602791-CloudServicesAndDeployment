@@ -32,10 +32,14 @@ Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
 | `AGENT_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
 | `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
 | `RATE_LIMIT_PER_MINUTE` | ✅ | 10 |
+| `TOKEN_LIMIT_PER_MINUTE` | ✅ | 10000 token / 60 giây / user |
 | `MONTHLY_BUDGET_USD` | ✅ | 10.0 |
 | `LOG_LEVEL` | ✅ | INFO |
 | `OPENAI_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
 | `OPENAI_MODEL` | ✅ | ví dụ: `gpt-5` |
+| `OPENAI_MAX_OUTPUT_TOKENS` | ✅ | 512 |
+| `OPENAI_INPUT_PRICE_PER_1K` | ✅ | theo model, ví dụ GPT-5.6 Luna: `0.0002` |
+| `OPENAI_OUTPUT_PRICE_PER_1K` | ✅ | theo model, ví dụ GPT-5.6 Luna: `0.0012` |
 
 ## Lệnh Kiểm Tra
 

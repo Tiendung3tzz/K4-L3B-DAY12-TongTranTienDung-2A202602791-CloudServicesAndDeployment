@@ -127,6 +127,17 @@ h1 {
   gap: 16px;
 }
 
+.usage-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 28px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  background: rgba(4, 8, 15, 0.18);
+  font-size: 11px;
+}
+
 .service-state {
   gap: 8px;
   color: var(--muted);
@@ -510,6 +521,12 @@ h1 {
 
   .chat-body {
     padding: 28px 18px 22px;
+  }
+
+  .usage-strip {
+    flex-direction: column;
+    gap: 3px;
+    padding: 9px 18px;
   }
 
   .composer-area {

@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     | agent_api_key           | str   | KHÔNG có mặc định (bắt buộc)|
     | redis_url               | str   | "redis://localhost:6379/0" |
     | rate_limit_per_minute   | int   | 10                         |
+    | token_limit_per_minute  | int   | 10000                      |
     | monthly_budget_usd      | float | 10.0                       |
     | log_level               | str   | "INFO"                     |
 
@@ -40,13 +41,14 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # TODO (CP1): khai báo 6 trường theo bảng trên, ví dụ:
+    # TODO (CP1): khai báo các trường theo bảng trên, ví dụ:
     #     port: int = 8000
     #     agent_api_key: str
     port : int = 8000
     agent_api_key : str
     redis_url : str = "redis://localhost:6379/0"
     rate_limit_per_minute : int = 10
+    token_limit_per_minute : int = 10000
     monthly_budget_usd : float = 10.0
     log_level : str = "INFO"
 

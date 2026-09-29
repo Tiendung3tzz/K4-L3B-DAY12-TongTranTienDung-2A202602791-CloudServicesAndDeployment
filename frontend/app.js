@@ -11,6 +11,8 @@ const saveSettingsButton = document.querySelector("#saveSettingsButton");
 const clearSettingsButton = document.querySelector("#clearSettingsButton");
 const apiKeyInput = document.querySelector("#apiKey");
 const userIdInput = document.querySelector("#userId");
+const requestUsage = document.querySelector("#requestUsage");
+const accountUsage = document.querySelector("#accountUsage");
 
 const STORAGE_KEYS = {
   apiKey: "day12-agent-api-key",
@@ -26,6 +28,25 @@ function setServiceState(state, text) {
   serviceState.classList.remove("online", "offline");
   if (state) serviceState.classList.add(state);
   serviceStateText.textContent = text;
+}
+
+function formatUsd(value) {
+  return `$${Number(value || 0).toFixed(6)}`;
+}
+
+function updateUsage(data) {
+  const usage = data.usage || {};
+  const totalTokens = usage.total_tokens ?? data.tokens_used ?? 0;
+  const requestCost = usage.request_cost_usd ?? data.cost_usd ?? 0;
+  const spent = usage.spent_usd ?? data.spent_usd ?? 0;
+  const minuteTokens = usage.tokens_last_minute;
+  const tokenLimit = usage.token_limit_per_minute;
+  const minuteText = Number.isFinite(Number(minuteTokens)) && tokenLimit
+    ? ` · ${minuteTokens.toLocaleString("vi-VN")}/${tokenLimit.toLocaleString("vi-VN")} token/phút`
+    : "";
+
+  requestUsage.textContent = `Lượt này: ${Number(totalTokens).toLocaleString("vi-VN")} token · ${formatUsd(requestCost)}${minuteText}`;
+  accountUsage.textContent = `Đã dùng tháng này: ${formatUsd(spent)}`;
 }
 
 function openSettings() {
@@ -130,6 +151,7 @@ async function sendQuestion(question) {
 
     typingRow.remove();
     addMessage(data.answer, "assistant");
+    updateUsage(data);
     setServiceState("online", "Online");
   } catch (error) {
     typingRow.remove();
