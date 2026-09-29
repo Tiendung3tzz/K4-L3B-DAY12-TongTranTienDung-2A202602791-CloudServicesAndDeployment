@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://agent-production-78bc.up.railway.app/:path*"
+    }
+  ]
+}

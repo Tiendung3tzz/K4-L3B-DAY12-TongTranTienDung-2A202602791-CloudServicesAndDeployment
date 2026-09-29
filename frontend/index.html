@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101828" />
+    <meta
+      name="description"
+      content="Day12 Agent - giao diện chat cho API agent trên Railway"
+    />
+    <title>Day12 Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="chat-card" aria-label="Day12 Agent chat">
+        <header class="chat-header">
+          <div class="brand-lockup">
+            <div class="brand-mark" aria-hidden="true">✦</div>
+            <div>
+              <p class="eyebrow">CLOUD AGENT</p>
+              <h1>Day12 Agent</h1>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <div class="service-state" id="serviceState">
+              <span class="state-dot" aria-hidden="true"></span>
+              <span id="serviceStateText">Đang kiểm tra</span>
+            </div>
+            <button class="icon-button" id="settingsButton" type="button" aria-label="Mở cài đặt">
+              <span aria-hidden="true">⚙</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="chat-body" id="messageList" aria-live="polite">
+          <div class="welcome-block">
+            <span class="welcome-icon" aria-hidden="true">✦</span>
+            <p class="eyebrow">SẴN SÀNG HỖ TRỢ</p>
+            <h2>Hỏi mình bất cứ điều gì.</h2>
+            <p class="welcome-copy">
+              Agent được triển khai trên Railway, lưu lịch sử hội thoại ở Redis
+              và sẵn sàng trả lời câu hỏi của bạn.
+            </p>
+            <div class="suggestion-row">
+              <button type="button" class="suggestion">Docker là gì?</button>
+              <button type="button" class="suggestion">Giải thích Redis</button>
+              <button type="button" class="suggestion">Health check dùng để làm gì?</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="composer-area">
+          <form class="composer" id="chatForm">
+            <label class="sr-only" for="question">Câu hỏi</label>
+            <textarea
+              id="question"
+              name="question"
+              rows="1"
+              maxlength="2000"
+              placeholder="Nhập câu hỏi của bạn..."
+              autocomplete="off"
+              required
+            ></textarea>
+            <button class="send-button" id="sendButton" type="submit" aria-label="Gửi câu hỏi">
+              <span aria-hidden="true">↑</span>
+            </button>
+          </form>
+          <p class="composer-hint">Enter để gửi · Shift + Enter để xuống dòng</p>
+        </div>
+      </section>
+
+      <footer class="page-footer">
+        <span>DAY12 AGENT</span>
+        <span class="footer-separator">•</span>
+        <span>SECURE · STATELESS · OBSERVABLE</span>
+      </footer>
+    </main>
+
+    <div class="modal-backdrop" id="settingsModal" hidden>
+      <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="settings-heading">
+          <div>
+            <p class="eyebrow">CONNECTION</p>
+            <h2 id="settingsTitle">Cài đặt phiên chat</h2>
+          </div>
+          <button class="close-button" id="closeSettingsButton" type="button" aria-label="Đóng">×</button>
+        </div>
+
+        <label class="field-label" for="apiKey">API key</label>
+        <input class="field-input" id="apiKey" type="password" placeholder="Nhập AGENT_API_KEY" autocomplete="off" />
+        <p class="field-help">Key chỉ được lưu trong trình duyệt hiện tại và gửi qua header bảo mật.</p>
+
+        <label class="field-label" for="userId">User ID</label>
+        <input class="field-input" id="userId" type="text" value="web-user" maxlength="100" autocomplete="off" />
+
+        <div class="settings-actions">
+          <button class="secondary-button" id="clearSettingsButton" type="button">Xóa key</button>
+          <button class="primary-button" id="saveSettingsButton" type="button">Lưu cài đặt</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
