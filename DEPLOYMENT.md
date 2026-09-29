@@ -11,8 +11,8 @@
 | Mục | Nội dung |
 |-----|----------|
 | Họ và tên | Tống Trần Tiến Dũng |
-| Mã học viên | (điền mã học viên) |
-| Repo | (điền link repo K4-L3B-DAY12-HoVaTen-MSSV-CloudServicesAndDeployment) |
+| Mã học viên | 2A202602791 |
+| Repo | https://github.com/Tiendung3tzz/K4-L3B-DAY12-TongTranTienDung-2A202602791-CloudServicesAndDeployment |
 
 ## Service
 

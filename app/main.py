@@ -13,22 +13,21 @@ Luồng một request tới /ask:
 
 from __future__ import annotations
 
-import os
 from contextlib import asynccontextmanager
 from functools import lru_cache
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from utils.real_llm import ask_llm
+from utils.mock_llm import ask_llm
 
 from .auth import verify_api_key
 from .config import get_settings
 from .cost_guard import CostGuard
 from .lifecycle import lifecycle
 from .logging_utils import log_event
-from .rate_limiter import RateLimiter, TokenRateLimiter
+from .rate_limiter import RateLimiter
 from .store import ConversationStore, get_redis_client
 
 SERVICE_NAME = "day12-agent"
@@ -48,13 +47,6 @@ def get_store() -> ConversationStore:
 @lru_cache(maxsize=1)
 def get_rate_limiter() -> RateLimiter:
     return RateLimiter(get_redis_client(), get_settings().rate_limit_per_minute)
-
-
-@lru_cache(maxsize=1)
-def get_token_limiter() -> TokenRateLimiter:
-    return TokenRateLimiter(
-        get_redis_client(), get_settings().token_limit_per_minute
-    )
 
 
 @lru_cache(maxsize=1)
@@ -144,7 +136,6 @@ def ask(
     user_id: str = Depends(verify_api_key),
     store: ConversationStore = Depends(get_store),
     limiter: RateLimiter = Depends(get_rate_limiter),
-    token_limiter: TokenRateLimiter = Depends(get_token_limiter),
     guard: CostGuard = Depends(get_cost_guard),
 ):
     """Hỏi agent một câu.
@@ -153,15 +144,14 @@ def ask(
       1. ``limiter.check(user_id)``           → 429 nếu gọi quá nhanh
       2. ``guard.check(user_id)``             → 402 nếu hết ngân sách
       3. ``history = store.get_history(user_id)``
-      4. kiểm tra giới hạn token/phút trước khi gọi LLM
-      5. ``result = ask_llm(payload.question, history)``
-      6. ``store.append(user_id, "user", payload.question)`` và
+      4. ``result = ask_llm(payload.question, history)``
+      5. ``store.append(user_id, "user", payload.question)`` và
          ``store.append(user_id, "assistant", result["answer"])``
-      7. ``guard.record(user_id, result["cost_usd"])`` và ghi token thực tế
-      8. ``log_event("ask_completed", user_id=user_id,
+      6. ``guard.record(user_id, result["cost_usd"])``
+      7. ``log_event("ask_completed", user_id=user_id,
          tokens_in=result["tokens_in"], tokens_out=result["tokens_out"],
          cost_usd=result["cost_usd"])``
-      9. trả về::
+      8. trả về::
 
             {
                 "answer": result["answer"],
@@ -169,7 +159,6 @@ def ask(
                 "history_length": len(history),
                 "cost_usd": result["cost_usd"],
                 "tokens": {"in": result["tokens_in"], "out": result["tokens_out"]},
-                "spent_usd": spent_usd,
             }
 
     Vì sao check trước rồi mới gọi LLM? Vì tiền mất ở bước gọi LLM. Chặn sau
@@ -179,41 +168,20 @@ def ask(
     hợp lệ sẽ dừng ở 401 trước khi chạm vào bất cứ dòng nào ở đây.
     """
     limiter.check(user_id)
-    requests_last_minute = limiter.hit_count(user_id)
     guard.check(user_id)
 
     history = store.get_history(user_id)
-    # Ước lượng bảo thủ trước khi gọi provider: khoảng 4 ký tự/token cho
-    # prompt và toàn bộ max output token. Token thực tế được ghi sau response.
-    prompt_chars = len(payload.question) + sum(
-        len(str(turn.get("content", ""))) for turn in history
-    )
-    estimated_tokens = max(1, (prompt_chars + 3) // 4) + int(
-        os.getenv("OPENAI_MAX_OUTPUT_TOKENS", "512")
-    )
-    token_limiter.check(user_id, estimated_tokens)
-    try:
-        result = ask_llm(payload.question, history)
-    except Exception as exc:
-        log_event("llm_failed", level="error", error=type(exc).__name__)
-        raise HTTPException(
-            status_code=502,
-            detail="LLM provider request failed",
-        ) from exc
+    result = ask_llm(payload.question, history)
 
     store.append(user_id, "user", payload.question)
     store.append(user_id, "assistant", result["answer"])
-    spent_usd = guard.record(user_id, result["cost_usd"])
-    total_tokens = int(result["tokens_in"]) + int(result["tokens_out"])
-    tokens_last_minute = token_limiter.record(user_id, total_tokens)
+    guard.record(user_id, result["cost_usd"])
     log_event(
         "ask_completed",
         user_id=user_id,
         tokens_in=result["tokens_in"],
         tokens_out=result["tokens_out"],
-        tokens_total=total_tokens,
         cost_usd=result["cost_usd"],
-        spent_usd=spent_usd,
     )
 
     return {
@@ -221,22 +189,9 @@ def ask(
         "user_id": user_id,
         "history_length": len(history),
         "cost_usd": result["cost_usd"],
-        "spent_usd": spent_usd,
-        "tokens_used": total_tokens,
         "tokens": {
             "in": result["tokens_in"],
             "out": result["tokens_out"],
-        },
-        "usage": {
-            "input_tokens": int(result["tokens_in"]),
-            "output_tokens": int(result["tokens_out"]),
-            "total_tokens": total_tokens,
-            "request_cost_usd": result["cost_usd"],
-            "spent_usd": spent_usd,
-            "tokens_last_minute": tokens_last_minute,
-            "token_limit_per_minute": token_limiter.limit,
-            "requests_last_minute": requests_last_minute,
-            "request_limit_per_minute": limiter.limit,
         },
     }
 
