@@ -1,5 +1,7 @@
 # K4 — Level 3B, Ngày 12: Hạ Tầng Cloud & Deployment (240 phút)
 
+[![CI](https://github.com/Tiendung3tzz/K4-L3B-DAY12-TongTranTienDung-2A202602791-CloudServicesAndDeployment/actions/workflows/ci.yml/badge.svg)](https://github.com/Tiendung3tzz/K4-L3B-DAY12-TongTranTienDung-2A202602791-CloudServicesAndDeployment/actions/workflows/ci.yml)
+
 Đưa một AI agent từ `localhost:8000` lên một địa chỉ công khai mà người khác
 gọi được, có bảo mật, có giới hạn chi phí, và không sập khi bạn deploy bản mới.
 
@@ -127,9 +129,7 @@ Chi tiết từng bước: [LAB_GUIDE.md](LAB_GUIDE.md).
 - Git + tài khoản GitHub
 - Tài khoản Railway hoặc Render (miễn phí, đăng ký ~5 phút — cần cho CP5)
 
-Ứng dụng hiện dùng OpenAI Responses API để trả lời thật, vì vậy cần đặt
-`OPENAI_API_KEY` trong môi trường chạy. `utils/mock_llm.py` vẫn được giữ lại
-như bản dự phòng cho các bài test offline.
+Không cần API key của OpenAI hoặc các bên cung cấp API khác: lab dùng **mock LLM** chạy offline.
 
 ### Môi trường ảo & thư viện
 
@@ -190,8 +190,7 @@ K4-L3B-DAY12-<HoVaTen>-<MSSV>-CloudServicesAndDeployment/
 │   ├── cost_guard.py      #   CP3 — ngân sách theo tháng
 │   ├── store.py           #   CP4 — lịch sử hội thoại trong Redis
 │   └── lifecycle.py       #   CP4 — graceful shutdown
-├── utils/mock_llm.py      # Bản dự phòng — LLM giả, không cần API key
-├── utils/real_llm.py      # Adapter gọi OpenAI Responses API
+├── utils/mock_llm.py      # Cho sẵn — LLM giả, không cần API key
 ├── Dockerfile             # ★ CP2 — sửa thành multi-stage
 ├── docker-compose.yml     # ★ CP2 — thêm service agent
 ├── .dockerignore          # ★ CP2 — bổ sung mục còn thiếu
@@ -279,13 +278,13 @@ Nộp **link repository** lên Codelab. Repo phải ở chế độ public.
 
 ## Danh Sách Kiểm Tra Trước Khi Nộp
 
-- [ ] Repo đúng tên `K4-L3B-DAY12-<HoVaTen>-<MSSV>-CloudServicesAndDeployment`
-- [ ] `pytest tests/ -v` — đã chạy và biết rõ test nào còn rớt, vì sao
-- [ ] `python grade.py` — xem điểm, mục tiêu ≥ 75/100
-- [ ] `exercises.md` — đủ 10 câu, viết bằng lời của mình
-- [ ] `DEPLOYMENT.md` — có Public URL thật, không dán giá trị API key
-- [ ] `screenshots/` — có ảnh dashboard và ảnh gọi `/health`
-- [ ] `.env` **không** nằm trong repo (`git ls-files | grep .env` chỉ ra `.env.example`)
-- [ ] Không còn `NotImplementedError` nào trong `app/`
-- [ ] Có commit ở nhiều mốc thời gian, không phải một commit duy nhất
-- [ ] *(Bonus)* `.github/workflows/ci.yml` chạy xanh, README có badge `passing`
+- [x] Repo đúng tên `K4-L3B-DAY12-<HoVaTen>-<MSSV>-CloudServicesAndDeployment`
+- [x] `pytest tests/ -v` — đã chạy và biết rõ test nào còn rớt, vì sao
+- [x] `python grade.py` — xem điểm, mục tiêu ≥ 75/100
+- [x] `exercises.md` — đủ 10 câu, viết bằng lời của mình
+- [x] `DEPLOYMENT.md` — có Public URL thật, không dán giá trị API key
+- [x] `screenshots/` — có ảnh dashboard và ảnh gọi `/health`
+- [x] `.env` **không** nằm trong repo (`git ls-files | grep .env` chỉ ra `.env.example`)
+- [x] Không còn `NotImplementedError` nào trong `app/`
+- [x] Có commit ở nhiều mốc thời gian, không phải một commit duy nhất
+- [] *(Bonus)* `.github/workflows/ci.yml` chạy xanh, README có badge `passing`

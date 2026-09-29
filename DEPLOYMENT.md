@@ -18,9 +18,9 @@
 
 | Mục | Nội dung |
 |-----|----------|
-| Public URL | https://TODO-thay-bang-url-that.up.railway.app |
-| Platform | Railway / Render / Cloud Run — (điền platform bạn dùng) |
-| Ngày deploy | (điền ngày) |
+| Public URL | https://agent-production-78bc.up.railway.app |
+| Platform | Railway|
+| Ngày deploy | 29/09/2026 |
 
 ## Biến Môi Trường Đã Set Trên Cloud
 
@@ -30,16 +30,10 @@ Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
 |------|--------|---------|
 | `PORT` | ✅ | platform tự gán |
 | `AGENT_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
-| `RATE_LIMIT_PER_MINUTE` | ✅ | 10 |
-| `TOKEN_LIMIT_PER_MINUTE` | ✅ | 10000 token / 60 giây / user |
+| `REDIS_URL` | ✅ | Railway Redis add-on / Variable Reference |
+| `RATE_LIMIT_PER_MINUTE` | ✅ | 4 |
 | `MONTHLY_BUDGET_USD` | ✅ | 10.0 |
 | `LOG_LEVEL` | ✅ | INFO |
-| `OPENAI_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `OPENAI_MODEL` | ✅ | ví dụ: `gpt-5` |
-| `OPENAI_MAX_OUTPUT_TOKENS` | ✅ | 512 |
-| `OPENAI_INPUT_PRICE_PER_1K` | ✅ | theo model, ví dụ GPT-5.6 Luna: `0.0002` |
-| `OPENAI_OUTPUT_PRICE_PER_1K` | ✅ | theo model, ví dụ GPT-5.6 Luna: `0.0012` |
 
 ## Lệnh Kiểm Tra
 
@@ -79,7 +73,59 @@ done; echo
 Dán output của các lệnh trên vào đây:
 
 ```
-(điền output)
+1.
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Tue, 29 Sep 2026 15:03:05 GMT
+Server: railway-hikari               
+x-railway-request-id: zOK9MwTdRDycvEgL0_TJvA
+Content-Length: 57                
+x-hikari-trace: sin1.d1nj
+x-railway-edge: sin1
+Connection: keep-alive
+
+{"status":"ok","service":"day12-agent","version":"1.0.0"}
+
+2.
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Tue, 29 Sep 2026 15:04:00 GMT
+Server: railway-hikari
+x-railway-request-id: ghfgjbuyRIOtikfJY53eZw
+Content-Length: 31
+x-hikari-trace: sin1.nzn2
+x-railway-edge: sin1
+Connection: keep-alive
+
+{"status":"ready","redis":true}
+
+3.
+HTTP/2 401 
+content-type: application/json
+date: Tue, 29 Sep 2026 15:07:01 GMT
+server: railway-hikari
+x-railway-request-id: kgBB6hKeRWCDrusF2h0iww
+content-length: 39
+x-hikari-trace: sin1.98a6
+x-railway-edge: sin1
+
+{"detail":"invalid or missing API key"}
+
+4.
+HTTP/2 200 
+content-type: application/json
+date: Tue, 29 Sep 2026 15:08:21 GMT
+server: railway-hikari
+x-railway-request-id: lMNGwiUCSPeT-fDEYqVb7A
+content-length: 337
+x-hikari-trace: sin1.d1nj
+x-railway-edge: sin1
+vary: accept-encoding
+
+{"answer":"Câu hỏi hay. Deploy là gì thường được giải quyết bằng cách chuẩn hóa môi trường chạy: cùng một image chạy giống nhau ở laptop và trên cloud. (Mình đang nhớ 2 lượt trao đổi trước đó.)","user_id":"sv-test","history_length":2,"cost_usd":3.285e-05,"tokens":{"in":39,"out":45}}
+
+5.
+200 200 200 200 429 429 429 429 429 429 429 429 429 429 429 
 ```
 
 ## Ảnh Chụp Màn Hình
@@ -102,6 +148,3 @@ Không đăng ký được tài khoản cloud? Vẫn nộp được bài, nhưng
    `http://localhost:8000`
 5. Ghi rõ lý do không deploy được vào phần dưới đây:
 
-```
-(điền lý do nếu dùng phương án dự phòng, ngược lại xóa mục này)
-```
