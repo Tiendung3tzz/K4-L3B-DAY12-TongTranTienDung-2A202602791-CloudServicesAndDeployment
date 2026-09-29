@@ -175,5 +175,5 @@ tìm ra nguyên nhân bằng cách nào, và sửa ra sao?
 + cấu hình REDIS_URL trên agent bằng biến reference:
 - Sau đó deploy lại agent và kiểm tra:
 health → 200
-ready  → 200
+ready  → 200.
 ---
