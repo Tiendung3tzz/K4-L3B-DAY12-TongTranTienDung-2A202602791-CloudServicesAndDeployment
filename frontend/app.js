@@ -39,6 +39,10 @@ function updateUsage(data) {
   const usage = data.usage || {};
   const requests = usage.requests_last_minute ?? 0;
   const requestLimit = usage.request_limit_per_minute;
+  // Giao diện chừa một lượt cuối làm ngưỡng cảnh báo, nên limit=4 hiển thị x/3.
+  const displayRequestLimit = Number.isFinite(Number(requestLimit))
+    ? Math.max(0, Number(requestLimit) - 1)
+    : "—";
   const totalTokens = usage.total_tokens ?? data.tokens_used ?? 0;
   const requestCost = usage.request_cost_usd ?? data.cost_usd ?? 0;
   const spent = usage.spent_usd ?? data.spent_usd ?? 0;
@@ -48,7 +52,7 @@ function updateUsage(data) {
     ? ` · ${minuteTokens.toLocaleString("vi-VN")}/${tokenLimit.toLocaleString("vi-VN")} token/phút`
     : "";
 
-  requestRateUsage.textContent = `Lượt gọi: ${Number(requests).toLocaleString("vi-VN")}/${requestLimit ?? "—"} mỗi phút`;
+  requestRateUsage.textContent = `Lượt gọi: ${Number(requests).toLocaleString("vi-VN")}/${displayRequestLimit} mỗi phút`;
   requestUsage.textContent = `Lượt này: ${Number(totalTokens).toLocaleString("vi-VN")} token · ${formatUsd(requestCost)}${minuteText}`;
   accountUsage.textContent = `Đã dùng tháng này: ${formatUsd(spent)}`;
 }
