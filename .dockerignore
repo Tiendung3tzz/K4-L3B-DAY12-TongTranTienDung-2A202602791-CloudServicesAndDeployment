@@ -4,3 +4,22 @@
 
 .git
 .gitignore
+.env
+.env.*
+.venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.log
+
+# Không cần trong image runtime.
+tests
+screenshots
+nginx
+*.md
+grade.py
+docker-compose*.yml
+railway.toml
+render.yaml
