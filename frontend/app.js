@@ -11,6 +11,7 @@ const saveSettingsButton = document.querySelector("#saveSettingsButton");
 const clearSettingsButton = document.querySelector("#clearSettingsButton");
 const apiKeyInput = document.querySelector("#apiKey");
 const userIdInput = document.querySelector("#userId");
+const requestRateUsage = document.querySelector("#requestRateUsage");
 const requestUsage = document.querySelector("#requestUsage");
 const accountUsage = document.querySelector("#accountUsage");
 
@@ -36,6 +37,8 @@ function formatUsd(value) {
 
 function updateUsage(data) {
   const usage = data.usage || {};
+  const requests = usage.requests_last_minute ?? 0;
+  const requestLimit = usage.request_limit_per_minute;
   const totalTokens = usage.total_tokens ?? data.tokens_used ?? 0;
   const requestCost = usage.request_cost_usd ?? data.cost_usd ?? 0;
   const spent = usage.spent_usd ?? data.spent_usd ?? 0;
@@ -45,6 +48,7 @@ function updateUsage(data) {
     ? ` · ${minuteTokens.toLocaleString("vi-VN")}/${tokenLimit.toLocaleString("vi-VN")} token/phút`
     : "";
 
+  requestRateUsage.textContent = `Lượt gọi: ${Number(requests).toLocaleString("vi-VN")}/${requestLimit ?? "—"} mỗi phút`;
   requestUsage.textContent = `Lượt này: ${Number(totalTokens).toLocaleString("vi-VN")} token · ${formatUsd(requestCost)}${minuteText}`;
   accountUsage.textContent = `Đã dùng tháng này: ${formatUsd(spent)}`;
 }

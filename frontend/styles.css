@@ -50,7 +50,7 @@ button {
 }
 
 .chat-card {
-  min-height: min(760px, calc(100vh - 90px));
+  height: min(760px, calc(100vh - 90px));
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -130,6 +130,7 @@ h1 {
 .usage-strip {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 10px 28px;
   border-bottom: 1px solid var(--line);
@@ -185,9 +186,12 @@ h1 {
 
 .chat-body {
   flex: 1;
-  min-height: 350px;
+  min-height: 0;
   padding: 42px clamp(20px, 8vw, 90px) 28px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(185, 245, 110, 0.35) transparent;
 }
 
 .welcome-block {
@@ -509,6 +513,7 @@ h1 {
   }
 
   .chat-card {
+    height: 100vh;
     min-height: 100vh;
     border-radius: 0;
     border-right: 0;

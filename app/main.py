@@ -179,6 +179,7 @@ def ask(
     hợp lệ sẽ dừng ở 401 trước khi chạm vào bất cứ dòng nào ở đây.
     """
     limiter.check(user_id)
+    requests_last_minute = limiter.hit_count(user_id)
     guard.check(user_id)
 
     history = store.get_history(user_id)
@@ -234,6 +235,8 @@ def ask(
             "spent_usd": spent_usd,
             "tokens_last_minute": tokens_last_minute,
             "token_limit_per_minute": token_limiter.limit,
+            "requests_last_minute": requests_last_minute,
+            "request_limit_per_minute": limiter.limit,
         },
     }
 
