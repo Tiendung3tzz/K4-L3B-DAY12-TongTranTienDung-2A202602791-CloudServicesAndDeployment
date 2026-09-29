@@ -127,7 +127,9 @@ Chi tiết từng bước: [LAB_GUIDE.md](LAB_GUIDE.md).
 - Git + tài khoản GitHub
 - Tài khoản Railway hoặc Render (miễn phí, đăng ký ~5 phút — cần cho CP5)
 
-Không cần API key của OpenAI hoặc các bên cung cấp API khác: lab dùng **mock LLM** chạy offline.
+Ứng dụng hiện dùng OpenAI Responses API để trả lời thật, vì vậy cần đặt
+`OPENAI_API_KEY` trong môi trường chạy. `utils/mock_llm.py` vẫn được giữ lại
+như bản dự phòng cho các bài test offline.
 
 ### Môi trường ảo & thư viện
 
@@ -188,7 +190,8 @@ K4-L3B-DAY12-<HoVaTen>-<MSSV>-CloudServicesAndDeployment/
 │   ├── cost_guard.py      #   CP3 — ngân sách theo tháng
 │   ├── store.py           #   CP4 — lịch sử hội thoại trong Redis
 │   └── lifecycle.py       #   CP4 — graceful shutdown
-├── utils/mock_llm.py      # Cho sẵn — LLM giả, không cần API key
+├── utils/mock_llm.py      # Bản dự phòng — LLM giả, không cần API key
+├── utils/real_llm.py      # Adapter gọi OpenAI Responses API
 ├── Dockerfile             # ★ CP2 — sửa thành multi-stage
 ├── docker-compose.yml     # ★ CP2 — thêm service agent
 ├── .dockerignore          # ★ CP2 — bổ sung mục còn thiếu

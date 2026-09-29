@@ -16,11 +16,11 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from functools import lru_cache
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from utils.mock_llm import ask_llm
+from utils.real_llm import ask_llm
 
 from .auth import verify_api_key
 from .config import get_settings
@@ -171,7 +171,14 @@ def ask(
     guard.check(user_id)
 
     history = store.get_history(user_id)
-    result = ask_llm(payload.question, history)
+    try:
+        result = ask_llm(payload.question, history)
+    except Exception as exc:
+        log_event("llm_failed", level="error", error=type(exc).__name__)
+        raise HTTPException(
+            status_code=502,
+            detail="LLM provider request failed",
+        ) from exc
 
     store.append(user_id, "user", payload.question)
     store.append(user_id, "assistant", result["answer"])
