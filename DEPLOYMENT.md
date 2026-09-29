@@ -10,7 +10,7 @@
 
 | Mục | Nội dung |
 |-----|----------|
-| Họ và tên | (điền họ tên) |
+| Họ và tên | Tống Trần Tiến Dũng |
 | Mã học viên | (điền mã học viên) |
 | Repo | (điền link repo K4-L3B-DAY12-HoVaTen-MSSV-CloudServicesAndDeployment) |
 
